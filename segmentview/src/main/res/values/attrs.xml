@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SegmentedView">
+        <attr name="textColorNormal" format="color" />
+        <attr name="textColorSelected" format="color" />
+        <attr name="textSize" format="dimension" />
+
+        <attr name="BgStrokeColorNormal" format="color" />
+        <attr name="BgStrokeColorSelected" format="color" />
+        <attr name="BgColorNormal" format="color" />
+        <attr name="BgColorSelected" format="color" />
+        <attr name="BgRadius" format="dimension" />
+        <attr name="StrokeWidth" format="dimension" />
+    </declare-styleable>
+</resources>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".MainActivity"
+    tools:showIn="@layout/activity_main">
+
+    <com.kds.just.segmentview.SegmentedView
+        android:id="@+id/segment"
+        android:layout_width="200dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="27dp"
+        android:layout_marginTop="30dp"
+        app:BgColorNormal="#ffffff"
+        app:BgColorSelected="#727af2"
+        app:BgRadius="3dp"
+        app:BgStrokeColorNormal="#d8d8d8"
+        app:BgStrokeColorSelected="#ff0000"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:textColorNormal="#d8d8d8"
+        app:textColorSelected="#ffffff"
+        app:textSize="13sp" />
+
+    <com.kds.just.segmentview.SegmentedView
+        android:id="@+id/segment01"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        app:BgColorNormal="#ffffff"
+        app:BgColorSelected="#ffffff"
+        app:BgRadius="10dp"
+        app:BgStrokeColorNormal="#d8d8d8"
+        app:BgStrokeColorSelected="#727af2"
+        app:layout_constraintBottom_toBottomOf="@+id/segment"
+        app:layout_constraintStart_toEndOf="@+id/segment"
+        app:layout_constraintTop_toTopOf="@+id/segment"
+        app:textColorNormal="#d8d8d8"
+        app:textColorSelected="#2d2d2d"
+        app:textSize="13sp" />
+
+    <com.kds.just.segmentview.SegmentedView
+        android:id="@+id/segment02"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:layout_marginTop="30dp"
+        app:BgColorNormal="#ffffff"
+        app:BgColorSelected="#ffffff"
+        app:BgRadius="7dp"
+        app:BgStrokeColorNormal="#d8d8d8"
+        app:BgStrokeColorSelected="#727af2"
+        app:layout_constraintStart_toStartOf="@+id/segment"
+        app:layout_constraintTop_toBottomOf="@+id/segment"
+        app:textColorNormal="#d8d8d8"
+        app:textColorSelected="#2d2d2d"
+        app:textSize="13sp" />
+</androidx.constraintlayout.widget.ConstraintLayout>
