@@ -3,13 +3,18 @@ package com.kds.just.segmentview;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.CornerPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -76,7 +81,9 @@ public class SegmentedView extends LinearLayout implements View.OnClickListener 
         setOrientation(LinearLayout.HORIZONTAL);
         setWillNotDraw(false);
 
+        setPadding(mStrokeWidth/2,0,mStrokeWidth/2,0);
         initPaint();
+
     }
 
     private Paint mBGNormalPaint;
@@ -85,6 +92,7 @@ public class SegmentedView extends LinearLayout implements View.OnClickListener 
     private Paint mBGSelectPaint;
     private Paint mBGSelectStrokePaint;
 
+    private Paint mMainPaint;
     private void initPaint() {
         mBGNormalPaint = new Paint();
         mBGNormalPaint.setStyle(Paint.Style.FILL);
@@ -96,19 +104,24 @@ public class SegmentedView extends LinearLayout implements View.OnClickListener 
         mBGNormalStrokePaint.setColor(mStrokeColorNormal);
         mBGNormalStrokePaint.setStrokeWidth(mStrokeWidth);
         mBGNormalStrokePaint.setAntiAlias(true);
+        mBGNormalStrokePaint.setDither(true);
+        mBGNormalStrokePaint.setStrokeJoin(Paint.Join.ROUND);    // set the join to round you want
 
         mBGSelectPaint = new Paint();
         mBGSelectPaint.setStyle(Paint.Style.FILL);
         mBGSelectPaint.setColor(mBGColorSelected);
         mBGSelectPaint.setAntiAlias(true);
 
-
         mBGSelectStrokePaint = new Paint();
         mBGSelectStrokePaint.setStyle(Paint.Style.STROKE);
         mBGSelectStrokePaint.setColor(mStrokeColorSelected);
         mBGSelectStrokePaint.setStrokeWidth(mStrokeWidth);
         mBGSelectStrokePaint.setAntiAlias(true);
+        mBGSelectStrokePaint.setDither(true);
+        mBGSelectStrokePaint.setStrokeJoin(Paint.Join.ROUND);    // set the join to round you want
 
+        mMainPaint = new Paint();
+        mMainPaint.setAntiAlias(true);
     }
 
     public void addItem(String text) {
@@ -122,6 +135,8 @@ public class SegmentedView extends LinearLayout implements View.OnClickListener 
         tv.setGravity(Gravity.CENTER);
         tv.setTag(getChildCount());
         tv.setOnClickListener(this);
+        tv.setPadding(mStrokeWidth/2,mStrokeWidth,mStrokeWidth/2,mStrokeWidth);
+
         addView(tv);
     }
 
@@ -141,39 +156,50 @@ public class SegmentedView extends LinearLayout implements View.OnClickListener 
         }
     }
 
+    private int mStrokePadding = 0;
     @Override
     protected void onDraw(Canvas canvas) {
+        int childCount = getChildCount();
+        mStrokePadding = mStrokeWidth / 2;
+        Log.e(TAG,"KDS3393_TEST_mStrokeWidth + " + mStrokeWidth + " StrokePadding = " + mStrokePadding);
         RectF rectF = new RectF(
-                0, // left
-                0, // top
-                canvas.getWidth(), // right
-                canvas.getHeight() // bottom
+                mStrokePadding, // left
+                mStrokePadding, // top
+                canvas.getWidth() - mStrokePadding, // right
+                canvas.getHeight() - mStrokePadding  // bottom
         );
+
         //draw background
         canvas.drawRoundRect(rectF,mRoundRadius,mRoundRadius,mBGNormalPaint);
         //draw round stroke
         canvas.drawRoundRect(rectF,mRoundRadius,mRoundRadius,mBGNormalStrokePaint);
 
+        drawDivider(canvas, childCount);
+        drawSelectRect(canvas, rectF,childCount);
+    }
+
+    private void drawDivider(Canvas canvas, int childCount) {
         //draw divider line
-        int childCount = getChildCount();
-        int w = canvas.getWidth();
+        int w = canvas.getWidth() - mStrokeWidth;
         int h = canvas.getHeight();
         for (int i=1;i<childCount;i++) {
-            int x = w/childCount * i;
+            int x = w/childCount * i + (mStrokeWidth / 2);
             canvas.drawLine(x,0,x,h,mBGNormalStrokePaint);
         }
+    }
 
+    private void drawSelectRect(Canvas canvas, RectF rectF, int childCount) {
         //draw select item
         if (mSelectIndex >= 0) {
             if (getChildCount() > 1) {
                 View v = getChildAt(mSelectIndex);
-                RectF itemRectf = new RectF(v.getLeft(),v.getTop(),v.getRight(),v.getHeight());
+                RectF itemRectf = new RectF(v.getLeft() ,v.getTop() + mStrokePadding,v.getRight(),v.getHeight() - mStrokePadding);
                 if (mSelectIndex == 0) {    //first item
-                    Path path = getDrawRoundPath(canvas,itemRectf,mRoundRadius,0,mRoundRadius,0);
+                    Path path = getDrawRoundPath(itemRectf,mRoundRadius,0,mRoundRadius,0);
                     canvas.drawPath(path, mBGSelectPaint);
                     canvas.drawPath(path, mBGSelectStrokePaint);
                 } else if (mSelectIndex == childCount - 1) {    //list Item
-                    Path path = getDrawRoundPath(canvas,itemRectf,0,mRoundRadius,0,mRoundRadius);
+                    Path path = getDrawRoundPath(itemRectf,0,mRoundRadius,0,mRoundRadius);
                     canvas.drawPath(path, mBGSelectPaint);
                     canvas.drawPath(path, mBGSelectStrokePaint);
                 } else {
@@ -189,8 +215,7 @@ public class SegmentedView extends LinearLayout implements View.OnClickListener 
         }
     }
 
-
-    private Path getDrawRoundPath(Canvas canvas, RectF rectF, int lt, int rt, int lb, int rb) {
+    private Path getDrawRoundPath(RectF rectF, int lt, int rt, int lb, int rb) {
         int topLeftRadius = lt;
         int topRightRadius = rt;
         int bottomLeftRadius = lb;
