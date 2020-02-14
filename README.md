@@ -2,7 +2,7 @@
 
 It's a very basic segmented button.
 
-![segmentview](https://user-images.githubusercontent.com/5418274/74506035-ffb5f100-4f3b-11ea-863a-508ff498e04e.gif)
+![segmentview1](https://user-images.githubusercontent.com/5418274/74515360-c4262180-4f51-11ea-90f2-23faf181f624.gif)
 
 
 Edit root/app/build.gradle like below.
