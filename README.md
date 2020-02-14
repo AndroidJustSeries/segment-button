@@ -18,7 +18,7 @@ allprojects {
 and:
 ```
 dependencies {
-    implementation 'com.github.AndroidJustSeries:segment-button:1.0.0'
+    implementation 'com.github.AndroidJustSeries:segment-button:1.1.0'
 }
 ```
 ## How to use
