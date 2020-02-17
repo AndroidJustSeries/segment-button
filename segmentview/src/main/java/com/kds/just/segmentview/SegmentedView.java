@@ -142,6 +142,10 @@ public class SegmentedView extends LinearLayout implements View.OnClickListener 
 
     public void setSelected(int index) {
         mSelectIndex = index;
+        for (int i=0;i<getChildCount();i++) {
+            TextView tv = (TextView) getChildAt(i);
+            tv.setSelected(((int)tv.getTag()) == index);
+        }
         invalidate();
     }
 
@@ -149,7 +153,7 @@ public class SegmentedView extends LinearLayout implements View.OnClickListener 
         return mSelectIndex;
     }
 
-    
+
     @Override
     public void onClick(View v) {
         int selectIndex = (int) v.getTag();
