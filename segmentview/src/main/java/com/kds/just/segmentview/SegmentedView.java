@@ -39,6 +39,8 @@ public class SegmentedView extends LinearLayout implements View.OnClickListener 
 
     private int mSelectIndex = -1;
 
+    EnhancedHalper.FontType mFontType = null;
+
     private OnSelectedItemListener mOnSelectedItemListener;
     public void setOnSelectedItemListener(OnSelectedItemListener l) {
         mOnSelectedItemListener = l;
@@ -51,7 +53,6 @@ public class SegmentedView extends LinearLayout implements View.OnClickListener 
         super(context);
         init();
     }
-
     public SegmentedView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
@@ -73,7 +74,7 @@ public class SegmentedView extends LinearLayout implements View.OnClickListener 
                 .getDimensionPixelSize(R.styleable.SegmentedView_StrokeWidth,mStrokeWidth);
         mTextSize = context.obtainStyledAttributes(attrs, R.styleable.SegmentedView)
                 .getDimensionPixelSize(R.styleable.SegmentedView_textSize,mStrokeWidth);
-
+        mFontType = EnhancedHalper.getFontType(context,attrs);
         init();
     }
 
@@ -124,6 +125,16 @@ public class SegmentedView extends LinearLayout implements View.OnClickListener 
         mMainPaint.setAntiAlias(true);
     }
 
+    public void setFont(EnhancedHalper.FontType fonttype) {
+        mFontType = fonttype;
+        for (int i=0;i<getChildCount();i++){
+            View v = getChildAt(i);
+            if (v instanceof TextView) {
+                EnhancedHalper.setFont((TextView) v,mFontType);
+            }
+        }
+    }
+
     public void addItem(String text) {
         TextView tv = new TextView(getContext());
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.MATCH_PARENT);
@@ -136,7 +147,9 @@ public class SegmentedView extends LinearLayout implements View.OnClickListener 
         tv.setTag(getChildCount());
         tv.setOnClickListener(this);
         tv.setPadding(mStrokeWidth/2,mStrokeWidth,mStrokeWidth/2,mStrokeWidth);
-
+        if (mFontType != null) {
+            EnhancedHalper.setFont(tv,mFontType);
+        }
         addView(tv);
     }
 
