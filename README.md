@@ -15,7 +15,7 @@ allprojects {
 }
 ```
 
-and:
+and: ![Version][![](https://jitpack.io/v/AndroidJustSeries/segment-button.svg)](https://jitpack.io/#AndroidJustSeries/segment-button)
 ```
 dependencies {
     implementation 'com.github.AndroidJustSeries:segment-button:1.1.0'
